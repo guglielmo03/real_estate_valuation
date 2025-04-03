@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath('..'))  # Adds the parent directory to sys.path
 import logging
 from src import config
 from src.load_data import load_data # STO RICHIAMANDO IL FILE LOAD DATA IN SRC E CHIAMO LA FUNZIONE load_data
+from src.make_model import train_model_complete, train_model_not_lat_long, train_model_lat_long
 #from src.preprocess import preprocess_data
 #from src.make_model import train_model
 # from src.evaluation import evaluate_model
@@ -18,16 +19,17 @@ def main():
 
     # Step 1: Load data from Excel and store it in SQLite
     logging.info("Loading raw data...")
-    load_data()
+    #load_data()
 
     # Step 2: Preprocess text data
     '''logging.info("Preprocessing data...")
     preprocess_data()
 '''
     # Step 3: Train sentiment analysis model
-    #logging.info("Training the model...")
-    #train_model()
-    '''train_model_logistic()'''
+    logging.info("Training the model...")
+    train_model_complete()
+    train_model_not_lat_long()
+    train_model_lat_long()
 
     '''# # Step 4: Evaluate model performance
     # logging.info("Evaluating the model...")

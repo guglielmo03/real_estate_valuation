@@ -1,17 +1,15 @@
-from src import config
 import sqlite3
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, r2_score
 import os
 import sys
 import pickle
 sys.path.append(os.path.abspath('..'))  # Adds the parent directory to sys.path
-
+from src import config
 import logging
 # Set up logging
 #logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -20,7 +18,7 @@ import logging
 def load_data(): # crea un dataframe partendo da sqlLite
     """Loads data from the SQLite database."""
     conn = sqlite3.connect(config.DATABASE_PATH)
-    query = f"SELECT * FROM {config.PROCESSED_TABLE}"
+    query = f"SELECT * FROM {config.RAW_TABLE}"
     df = pd.read_sql_query(query, conn)
     conn.close()
     return df
@@ -29,7 +27,7 @@ def load_data(): # crea un dataframe partendo da sqlLite
 def train_model_complete(grid_search=False):
     """Trains a Random Forest model with GridSearchCV and saves evaluation metrics to CSV."""
     #df = load_data().head(100) # prendiamo solo un sottoinsieme del dataset (di 100 righe). Sarebbe meglio fare sample
-    df = load_data().sample(1000) # facciamolo solo su 1000
+    df = load_data()
 
     # Save original indices before vectorization
     df_indices = df.index
@@ -51,21 +49,21 @@ def train_model_complete(grid_search=False):
     )
 
     if grid_search:
-        rf = RandomForestClassifier(random_state=42)
+        rf = RandomForestRegressor(random_state=42)
         param_grid = {
             'n_estimators': [50, 100, 200],
             'max_depth': [None, 10, 20],
             'min_samples_split': [2, 5, 10]
         }
 
-        grid_search = GridSearchCV(rf, param_grid, cv=3, scoring='accuracy', n_jobs=-1, verbose=1)
+        grid_search = GridSearchCV(rf, param_grid, cv=3, scoring='mean_absolute_error', n_jobs=-1, verbose=1)
         grid_search.fit(X_train, y_train)
 
         best_model = grid_search.best_estimator_
         y_pred = best_model.predict(X_test)
     
     else:
-        rf = RandomForestClassifier()
+        rf = RandomForestRegressor()
         rf.fit(X_train, y_train)
         y_pred = rf.predict(X_test)
 
@@ -80,10 +78,8 @@ def train_model_complete(grid_search=False):
 
     # Compute metrics
     metrics = {
-        'accuracy': accuracy_score(y_test, y_pred),
-        'precision': precision_score(y_test, y_pred, average='weighted', zero_division=0),
-        'recall': recall_score(y_test, y_pred, average='weighted', zero_division=0),
-        'f1_score': f1_score(y_test, y_pred, average='weighted', zero_division=0)
+        'accuracy': mean_absolute_error(y_test, y_pred),
+        "r2": r2_score(y_test, y_pred)
     }
 
     # Connect to the database
@@ -103,7 +99,7 @@ def train_model_complete(grid_search=False):
 def train_model_not_lat_long(grid_search=False):
     """Trains a Random Forest model with GridSearchCV and saves evaluation metrics to CSV."""
     #df = load_data().head(100) # prendiamo solo un sottoinsieme del dataset (di 100 righe). Sarebbe meglio fare sample
-    df = load_data().sample(1000) # facciamolo solo su 1000
+    df = load_data()
 
     # Save original indices before vectorization
     df_indices = df.index
@@ -125,7 +121,7 @@ def train_model_not_lat_long(grid_search=False):
     )
 
     if grid_search:
-        rf = RandomForestClassifier(random_state=42)
+        rf = RandomForestRegressor(random_state=42)
         param_grid = {
             'n_estimators': [50, 100, 200],
             'max_depth': [None, 10, 20],
@@ -139,7 +135,7 @@ def train_model_not_lat_long(grid_search=False):
         y_pred = best_model.predict(X_test)
     
     else:
-        rf = RandomForestClassifier()
+        rf = RandomForestRegressor()
         rf.fit(X_train, y_train)
         y_pred = rf.predict(X_test)
 
@@ -154,10 +150,8 @@ def train_model_not_lat_long(grid_search=False):
 
     # Compute metrics
     metrics = {
-        'accuracy': accuracy_score(y_test, y_pred),
-        'precision': precision_score(y_test, y_pred, average='weighted', zero_division=0),
-        'recall': recall_score(y_test, y_pred, average='weighted', zero_division=0),
-        'f1_score': f1_score(y_test, y_pred, average='weighted', zero_division=0)
+        'accuracy': mean_absolute_error(y_test, y_pred),
+        "r2": r2_score(y_test, y_pred)
     }
 
     # Connect to the database
@@ -177,7 +171,7 @@ def train_model_not_lat_long(grid_search=False):
 def train_model_lat_long(grid_search=False):
     """Trains a Random Forest model with GridSearchCV and saves evaluation metrics to CSV."""
     #df = load_data().head(100) # prendiamo solo un sottoinsieme del dataset (di 100 righe). Sarebbe meglio fare sample
-    df = load_data().sample(1000) # facciamolo solo su 1000
+    df = load_data()
 
     # Save original indices before vectorization
     df_indices = df.index
@@ -199,7 +193,7 @@ def train_model_lat_long(grid_search=False):
     )
 
     if grid_search:
-        rf = RandomForestClassifier(random_state=42)
+        rf = RandomForestRegressor(random_state=42)
         param_grid = {
             'n_estimators': [50, 100, 200],
             'max_depth': [None, 10, 20],
@@ -213,7 +207,7 @@ def train_model_lat_long(grid_search=False):
         y_pred = best_model.predict(X_test)
     
     else:
-        rf = RandomForestClassifier()
+        rf = RandomForestRegressor()
         rf.fit(X_train, y_train)
         y_pred = rf.predict(X_test)
 
@@ -228,10 +222,8 @@ def train_model_lat_long(grid_search=False):
 
     # Compute metrics
     metrics = {
-        'accuracy': accuracy_score(y_test, y_pred),
-        'precision': precision_score(y_test, y_pred, average='weighted', zero_division=0),
-        'recall': recall_score(y_test, y_pred, average='weighted', zero_division=0),
-        'f1_score': f1_score(y_test, y_pred, average='weighted', zero_division=0)
+        'accuracy': mean_absolute_error(y_test, y_pred),
+        "r2": r2_score(y_test, y_pred)
     }
 
     # Connect to the database
