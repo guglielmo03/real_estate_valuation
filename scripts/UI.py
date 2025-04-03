@@ -49,4 +49,4 @@ if st.button("Prevedi costo casa"):
         X_input = np.array([[latitudine, longitudine, eta_immobile, distanza_mrt, num_minimarket]])
         prediction = rfComplete.predict(X_input)[0]
 
-    st.success(f"🏡 Valore stimato dell'immobile: **{prediction:.2f}** dollari per unità d'area")
+    st.success(f"🏡 Valore stimato dell'immobile: **{prediction:.2f}** dollari per unità d'area.")
