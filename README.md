@@ -28,7 +28,7 @@ Una volta generati i modelli, per avviare l'applicazione sarà sufficiente esegu
 
 Qui, bisognerà decidere quali variabili inserire (e quindi, indirettamente, quale modello utilizzare), immetere i dati e premere "Prevedi costo casa" per avere la previsione.
 
-## Visualizzazione Tableau Public
+## 🗺️ Visualizzazione Tableau Public
 Con gli stessi dati, ho creato un semplice grafico interattivo nel quale vengono i punti in cui si trovano le case direttamente sulla cartina geografica. Il colore sta ad indicare il numero di markets più vicini (colore tendente al rosso indica che ce ne sono di più e viceversa con il blu). 
 
 Passando il cursore sopra ogni punto, è possibile leggere i dati relativi a: età della casa, distanza dalla stazione MRT più vicina, il numero effettivo di markets vicini e il relativo prezzo.
