@@ -12,31 +12,20 @@ import logging
 
 def load_data():
     logging.info('Opening Excel Files...')
-    e1 = pd.read_excel(os.path.join(config.RAW_DATA_PATH,
-                    'earth_day_tweets_sentiment_50k_(1).xlsx'))
-    e1.drop_duplicates(inplace=True)
+    df = pd.read_excel(os.path.join(config.RAW_DATA_PATH,
+                    'Real estate valuation data set.xlsx'))
+    df.drop_duplicates(inplace=True) # drop duplicates
 
-    e2 = pd.read_excel(os.path.join(config.RAW_DATA_PATH,
-                    'earth_day_tweets_sentiment_50k_(2).xlsx'))
-    e2.drop_duplicates(inplace=True)
+    # drop useless variables
+    df.drop(columns=["No", "X1 transaction date"], inplace=True)
 
-    fifa = pd.read_excel(os.path.join(config.RAW_DATA_PATH,
-                        'fifa_world_cup_2022_tweets_sentiment_22k.xlsx'))
-    fifa.drop_duplicates(inplace=True)
-
-
-    generic = pd.read_excel(os.path.join(config.RAW_DATA_PATH, 'generic_27k.xlsx'))
-    generic.drop_duplicates(inplace=True)
-
-
-    e1 = e1[['text', 'sentiment']]
-    e2 = e2[['text', 'sentiment']]
-    fifa = fifa[['Tweet', 'Sentiment']]
-    fifa.columns = ['text', 'sentiment'] # rinomina i nomi delle colonne
-    generic = generic[['text', 'sentiment']]
-    df = pd.concat([e1, e2, fifa, generic]) # li mette uno sotto l'altro
-    df.reset_index(drop=True, inplace=True)
-    
+    # rename variables
+    df.rename(columns={"X2 house age": "house_age", 
+                   "X3 distance to the nearest MRT station": "distance_nearest_mrt_station",
+                   "X4 number of convenience stores": "number_convenience_stores",
+                   "X5 latitude": "latitude",
+                   "X6 longitude": "longitude",
+                   "Y house price of unit area": "y_house_price_unit_area"}, inplace=True)    
 
     # Create a connection to the SQLite database (or create if it doesn't exist)
     conn = sqlite3.connect(config.DATABASE_PATH)

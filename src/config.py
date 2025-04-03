@@ -4,10 +4,10 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Paths for raw data (Excel files)
-RAW_DATA_PATH = os.path.join(BASE_DIR, "../data/raw/")
+RAW_DATA_PATH = os.path.join(BASE_DIR, "../data/")
 
 # SQLite Database Path
-DATABASE_PATH = os.path.join(BASE_DIR, "../database/sentiment.db")
+DATABASE_PATH = os.path.join(BASE_DIR, "../database/houses.db")
 
 # Preprocessed Data Table Name
 PROCESSED_TABLE = "processed_tweets"
