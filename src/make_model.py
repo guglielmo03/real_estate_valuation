@@ -2,7 +2,6 @@ import sqlite3
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
 import os
@@ -11,9 +10,6 @@ import pickle
 sys.path.append(os.path.abspath('..'))  # Adds the parent directory to sys.path
 from src import config
 import logging
-# Set up logging
-#logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
 
 def load_data(): # crea un dataframe partendo da sqlLite
     """Loads data from the SQLite database."""
@@ -26,19 +22,10 @@ def load_data(): # crea un dataframe partendo da sqlLite
 
 def train_model_complete(grid_search=False):
     """Trains a Random Forest model with GridSearchCV and saves evaluation metrics to CSV."""
-    #df = load_data().head(100) # prendiamo solo un sottoinsieme del dataset (di 100 righe). Sarebbe meglio fare sample
     df = load_data()
 
     # Save original indices before vectorization
     df_indices = df.index
-
-    # Feature extraction
-    '''vectorizerRF = TfidfVectorizer()
-    X = vectorizerRF.fit_transform(df['cleaned_text']) # usa TF-IDF per trasformare le parole in vettori
-    y = df['y_house_price_unit_area']
-
-    with open(f"{config.MODELS_PATH}vectorizerRF.pickle", "wb") as f: # wb: write binary
-        pickle.dump(vectorizerRF, f)'''
 
     X = df[["house_age", "distance_nearest_mrt_station", "number_convenience_stores", "latitude", "longitude"]]
     y = df['y_house_price_unit_area']
@@ -98,19 +85,10 @@ def train_model_complete(grid_search=False):
 
 def train_model_not_lat_long(grid_search=False):
     """Trains a Random Forest model with GridSearchCV and saves evaluation metrics to CSV."""
-    #df = load_data().head(100) # prendiamo solo un sottoinsieme del dataset (di 100 righe). Sarebbe meglio fare sample
     df = load_data()
 
     # Save original indices before vectorization
     df_indices = df.index
-
-    # Feature extraction
-    '''vectorizerRF = TfidfVectorizer()
-    X = vectorizerRF.fit_transform(df['cleaned_text']) # usa TF-IDF per trasformare le parole in vettori
-    y = df['y_house_price_unit_area']
-
-    with open(f"{config.MODELS_PATH}vectorizerRF.pickle", "wb") as f: # wb: write binary
-        pickle.dump(vectorizerRF, f)'''
 
     X = df[["house_age", "distance_nearest_mrt_station", "number_convenience_stores"]]
     y = df['y_house_price_unit_area']
@@ -170,19 +148,10 @@ def train_model_not_lat_long(grid_search=False):
 
 def train_model_lat_long(grid_search=False):
     """Trains a Random Forest model with GridSearchCV and saves evaluation metrics to CSV."""
-    #df = load_data().head(100) # prendiamo solo un sottoinsieme del dataset (di 100 righe). Sarebbe meglio fare sample
     df = load_data()
 
     # Save original indices before vectorization
     df_indices = df.index
-
-    # Feature extraction
-    '''vectorizerRF = TfidfVectorizer()
-    X = vectorizerRF.fit_transform(df['cleaned_text']) # usa TF-IDF per trasformare le parole in vettori
-    y = df['y_house_price_unit_area']
-
-    with open(f"{config.MODELS_PATH}vectorizerRF.pickle", "wb") as f: # wb: write binary
-        pickle.dump(vectorizerRF, f)'''
 
     X = df[["latitude", "longitude"]]
     y = df['y_house_price_unit_area']

@@ -1,3 +1,4 @@
+# load needed libraries
 import os
 import sys
 sys.path.append(os.path.abspath(".."))
@@ -16,13 +17,15 @@ with open(os.path.join(config.MODELS_PATH, "random_forest_lat_long.pickle"), "rb
 with open(os.path.join(config.MODELS_PATH, "random_forest_not_lat_long.pickle"), "rb") as file:
     rfNotLatLong = pickle.load(file)
 
-st.title("Previsione costo casa")
+st.title("Previsione costo casa!")
 
+# ask the user decision
 selectedModel = st.selectbox(
          'Quali dati vorresti immetere per prevedere il prezzo della casa?',
          ('Latitudine e Longitudine', 'Età dell’immobile, distanza dalla stazione MRT più vicina e numero di minimarket nelle vicinanze',
           "Tutti quelli possibili"))
 
+# show labels respect to the user decision
 if selectedModel == "Latitudine e Longitudine":
     latitudine = st.number_input("Latitudine", min_value=-90.0, max_value=90.0, value=25.0, step=0.01)
     longitudine = st.number_input("Longitudine", min_value=-180.0, max_value=180.0, value=120.0, step=0.01)
@@ -49,4 +52,5 @@ if st.button("Prevedi costo casa"):
         X_input = np.array([[latitudine, longitudine, eta_immobile, distanza_mrt, num_minimarket]])
         prediction = rfComplete.predict(X_input)[0]
 
+    # return message
     st.success(f"🏡 Valore stimato dell'immobile: **{prediction:.2f}** dollari per unità d'area.")

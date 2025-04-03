@@ -9,9 +9,6 @@ RAW_DATA_PATH = os.path.join(BASE_DIR, "../data/")
 # SQLite Database Path
 DATABASE_PATH = os.path.join(BASE_DIR, "../database/houses.db")
 
-# Preprocessed Data Table Name
-PROCESSED_TABLE = "processed_tweets"
-
 # Raw Data Table Name
 RAW_TABLE = "raw"
 
